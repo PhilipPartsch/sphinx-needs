@@ -271,14 +271,14 @@ def test_needuml_jinja_func_ref(test_app, snapshot):
 
     html = Path(app.outdir, "index.html").read_text(encoding="utf8")
 
-    assert "Marvel:  [[../index.html#ST_001 Test story]]" in html
-    assert "DC:  [[../index.html#ST_002 Different text to explain the story]]" in html
+    assert "Marvel: [[../index.html#ST_001 Test story]]" in html
+    assert "DC: [[../index.html#ST_002 Different text to explain the story]]" in html
 
-    assert "Marvel:  [[../index.html#ST_001.np_id np_id]]" in html
-    assert "DC:  [[../index.html#ST_001.np_id np_content]]" in html
+    assert "Marvel: [[../index.html#ST_001.np_id np_id]]" in html
+    assert "DC: [[../index.html#ST_001.np_id np_content]]" in html
 
     assert (
-        "Marvel:  [[../index.html#ST_001.np_id Different text to explain the story 2]]"
+        "Marvel: [[../index.html#ST_001.np_id Different text to explain the story 2]]"
         in html
     )
 
