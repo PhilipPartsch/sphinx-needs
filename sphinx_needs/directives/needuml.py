@@ -3,6 +3,7 @@ from __future__ import annotations
 import html
 import os
 from typing import TYPE_CHECKING, Any, Dict, List, Sequence, TypedDict
+import copy
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -16,7 +17,7 @@ from sphinx_needs.debug import measure_time
 from sphinx_needs.diagrams_common import calculate_link
 from sphinx_needs.directives.needflow import make_entity_name
 from sphinx_needs.filter_common import filter_needs
-from sphinx_needs.utils import add_doc
+from sphinx_needs.utils import add_doc, split_need_id
 
 if TYPE_CHECKING:
     from sphinxcontrib.plantuml import plantuml
@@ -393,23 +394,51 @@ class JinjaFunctions:
         return need_uml
 
     def ref(
-        self, need_id: str, option: None | str = None, text: None | str = None
-    ) -> str:
-        if need_id not in self.needs:
+            self, need_id: str, option: str = "", text: str = ""
+        ) -> str:
+
+        need_id_main, need_id_part = split_need_id(need_id)
+
+        if need_id_main not in self.needs:
             raise NeedumlException(
                 f"Jinja function ref is called with undefined need_id: '{need_id}'."
             )
-        if (option and text) and (not option and not text):
+
+        if (option != "" and text != ""):
             raise NeedumlException(
-                "Jinja function ref requires exactly one entry 'option' or 'text'"
+                "Jinja function ref requires 'option' or 'text', not both"
             )
 
-        need_info = self.needs[need_id]
-        link = calculate_link(self.app, need_info, self.fromdocname)
+        if need_id_part:
+            # We are changing the needinfo, so we need a deepcopy, to not change the original data.
+            need_info = copy.deepcopy(self.needs[need_id_main])
 
-        need_uml = " [[{link} {content}]]".format(
+            if need_id_part not in need_info["parts"]:
+                raise NeedumlException(
+                    f"Jinja function ref is called with undefined need_id part: '{need_id}'."
+                )
+
+            # This algorithm is following the implmentation of needref
+            need_info["id"] = need_id_part
+            need_info["title"] = need_info["parts"][need_id_part]["content"]
+            need_info["is_part"] = True
+            need_info["is_need"] = False
+
+        else:
+            need_info = self.needs[need_id_main]
+
+        if (option != "" and option not in need_info):
+            raise NeedumlException(
+                f"Jinja function ref is called with undefined option '{option}' for need '{need_id}'."
+            )
+
+        link = calculate_link(self.app, need_info, self.fromdocname)
+        content: str = need_info.get(option, "") if option != "" else text
+
+        need_uml = "[[{link}{seperator}{content}]]".format(
             link=link,
-            content=need_info.get(option, "") if option else text,
+            seperator=" " if content != "" else "",
+            content=content,
         )
 
         return need_uml
