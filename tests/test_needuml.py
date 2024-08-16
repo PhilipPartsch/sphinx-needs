@@ -277,7 +277,10 @@ def test_needuml_jinja_func_ref(test_app, snapshot):
     assert "Marvel:  [[../index.html#ST_001.np_id np_id]]" in html
     assert "DC:  [[../index.html#ST_001.np_id np_content]]" in html
 
-    assert "Marvel:  [[../index.html#ST_001.np_id Different text to explain the story 2]]" in html
+    assert (
+        "Marvel:  [[../index.html#ST_001.np_id Different text to explain the story 2]]"
+        in html
+    )
 
     srcdir = Path(app.srcdir)
     out_dir = srcdir / "_build"
