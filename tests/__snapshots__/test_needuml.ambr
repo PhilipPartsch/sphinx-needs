@@ -1280,10 +1280,10 @@
         
         DC -> Marvel: [[../index.html#ST_001 Test story]]
         Marvel --> DC: [[../index.html#ST_002 Different text to explain the story]]
-
+        
         DC -> Marvel: [[../index.html#ST_001.np_id np_id]]
         Marvel --> DC: [[../index.html#ST_001.np_id  np_content]]
-
+        
         DC -> Marvel: [[../index.html#ST_001.np_id Different text to explain the story 2]]
         @enduml
   
