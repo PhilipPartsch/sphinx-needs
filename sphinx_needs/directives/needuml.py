@@ -432,7 +432,7 @@ class JinjaFunctions:
         link = calculate_link(self.app, need_info, self.fromdocname)
         content: str = need_info.get(option, "") if option != "" else text
         # We have to strip the content, as leading spaces will break the plantuml rendering.
-        content = content.strip(' \t\n\r')
+        content = content.strip(" \t\n\r")
 
         need_uml = "[[{link}{seperator}{content}]]".format(
             link=link,
