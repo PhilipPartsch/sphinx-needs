@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+import copy
 import html
 import os
 from typing import TYPE_CHECKING, Any, Dict, List, Sequence, TypedDict
-import copy
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -393,10 +393,7 @@ class JinjaFunctions:
 
         return need_uml
 
-    def ref(
-            self, need_id: str, option: str = "", text: str = ""
-        ) -> str:
-
+    def ref(self, need_id: str, option: str = "", text: str = "") -> str:
         need_id_main, need_id_part = split_need_id(need_id)
 
         if need_id_main not in self.needs:
@@ -404,7 +401,7 @@ class JinjaFunctions:
                 f"Jinja function ref is called with undefined need_id: '{need_id}'."
             )
 
-        if (option != "" and text != ""):
+        if option != "" and text != "":
             raise NeedumlException(
                 "Jinja function ref requires 'option' or 'text', not both"
             )
@@ -427,7 +424,7 @@ class JinjaFunctions:
         else:
             need_info = self.needs[need_id_main]
 
-        if (option != "" and option not in need_info):
+        if option != "" and option not in need_info:
             raise NeedumlException(
                 f"Jinja function ref is called with undefined option '{option}' for need '{need_id}'."
             )
