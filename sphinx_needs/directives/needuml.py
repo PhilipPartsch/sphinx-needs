@@ -16,6 +16,7 @@ from sphinx_needs.data import NeedsInfoType, SphinxNeedsData
 from sphinx_needs.debug import measure_time
 from sphinx_needs.diagrams_common import calculate_link
 from sphinx_needs.directives.needflow import make_entity_name
+from sphinx_needs.roles.need_ref import transform_need_to_dict
 from sphinx_needs.filter_common import filter_needs
 from sphinx_needs.utils import add_doc, split_need_id
 
@@ -401,15 +402,25 @@ class JinjaFunctions:
                 f"Jinja function ref is called with undefined need_id: '{need_id}'."
             )
 
+        target_need = all_needs[need_id_main]
+
         if option != "" and text != "":
             raise NeedumlException(
                 "Jinja function ref requires 'option' or 'text', not both"
             )
 
-        if need_id_part:
-            # We are changing the needinfo, so we need a deepcopy, to not change the original data.
-            need_info = copy.deepcopy(self.needs[need_id_main])
+        if option != "" and option not in target_need:
+            raise NeedumlException(
+                f"Jinja function ref is called with undefined option '{option}' for need '{need_id}'."
+            )
 
+        # needref is using a dict of {str, str} to parse it later with user input.
+        # Here we do the same.
+        dict_need = transform_need_to_dict(
+                target_need
+            )  # Transform a dict in a dict of {str, str}
+
+        if need_id_part:
             if need_id_part not in need_info["parts"]:
                 raise NeedumlException(
                     f"Jinja function ref is called with undefined need_id part: '{need_id}'."
@@ -421,17 +432,10 @@ class JinjaFunctions:
             need_info["is_part"] = True
             need_info["is_need"] = False
 
-        else:
-            need_info = self.needs[need_id_main]
-
-        if option != "" and option not in need_info:
-            raise NeedumlException(
-                f"Jinja function ref is called with undefined option '{option}' for need '{need_id}'."
-            )
-
         link = calculate_link(self.app, need_info, self.fromdocname)
         content: str = need_info.get(option, "") if option != "" else text
-        # We have to strip the content, as leading spaces will break the plantuml rendering.
+        # We have to strip the content, as leading and following spaces
+        # will break the plantuml rendering.
         content = content.strip(" \t\n\r")
 
         need_uml = "[[{link}{seperator}{content}]]".format(
