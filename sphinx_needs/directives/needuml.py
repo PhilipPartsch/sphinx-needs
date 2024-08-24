@@ -402,7 +402,7 @@ class JinjaFunctions:
                 f"Jinja function ref is called with undefined need_id: '{need_id}'."
             )
 
-        target_need = all_needs[need_id_main]
+        target_need = self.needs[need_id_main]
 
         if option != "" and text != "":
             raise NeedumlException(
@@ -421,27 +421,27 @@ class JinjaFunctions:
             )  # Transform a dict in a dict of {str, str}
 
         if need_id_part:
-            if need_id_part not in need_info["parts"]:
+            if need_id_part not in target_need["parts"]:
                 raise NeedumlException(
                     f"Jinja function ref is called with undefined need_id part: '{need_id}'."
                 )
 
             # This algorithm is following the implmentation of needref
-            need_info["id"] = need_id_part
-            need_info["title"] = need_info["parts"][need_id_part]["content"]
-            need_info["is_part"] = True
-            need_info["is_need"] = False
+            dict_need["id"] = need_id_part
+            dict_need["title"] = target_need["parts"][need_id_part]["content"]
+            dict_need["is_part"] = True
+            dict_need["is_need"] = False
 
-        link = calculate_link(self.app, need_info, self.fromdocname)
-        content: str = need_info.get(option, "") if option != "" else text
-        # We have to strip the content, as leading and following spaces
+        link = calculate_link(self.app, target_need, self.fromdocname)
+        link_text: str = dict_need.get(option, "") if option != "" else text
+        # We have to strip the link_text, as leading and following spaces
         # will break the plantuml rendering.
-        content = content.strip(" \t\n\r")
+        link_text = link_text.strip(" \t\n\r")
 
-        need_uml = "[[{link}{seperator}{content}]]".format(
+        need_uml = "[[{link}{seperator}{link_text}]]".format(
             link=link,
-            seperator=" " if content != "" else "",
-            content=content,
+            seperator=" " if link_text != "" else "",
+            link_text=link_text,
         )
 
         return need_uml
