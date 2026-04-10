@@ -1,6 +1,6 @@
 window.BENCHMARK_DATA = {
-  "lastUpdate": 1712849483408,
-  "repoUrl": "https://github.com/useblocks/sphinx-needs",
+  "lastUpdate": 1775801357412,
+  "repoUrl": "https://github.com/PhilipPartsch/sphinx-needs",
   "entries": {
     "Benchmark": [
       {
@@ -7488,6 +7488,42 @@ window.BENCHMARK_DATA = {
             "value": 59.007671181999996,
             "unit": "s",
             "extra": "Commit: 90bae4a7664d8c7d899f034671374007a6b792f4\nBranch: master\nTime: 2024-04-11T17:29:22+02:00"
+          }
+        ]
+      },
+      {
+        "commit": {
+          "author": {
+            "email": "198982749+Copilot@users.noreply.github.com",
+            "name": "Copilot",
+            "username": "Copilot"
+          },
+          "committer": {
+            "email": "noreply@github.com",
+            "name": "GitHub",
+            "username": "web-flow"
+          },
+          "distinct": true,
+          "id": "df81a5c8e9c80866923679a34c9805b0488f5a93",
+          "message": "👌 Short-circuit simple filter expressions to avoid `eval()` overhead (#1677)",
+          "timestamp": "2026-03-31T16:41:55+02:00",
+          "tree_id": "f0ff68c6dd9a83e02519988d722c95a732ef4d65",
+          "url": "https://github.com/PhilipPartsch/sphinx-needs/commit/df81a5c8e9c80866923679a34c9805b0488f5a93"
+        },
+        "date": 1775801353063,
+        "tool": "customSmallerIsBetter",
+        "benches": [
+          {
+            "name": "Small, basic Sphinx-Needs project",
+            "value": 0.1518183160000035,
+            "unit": "s",
+            "extra": "Commit: df81a5c8e9c80866923679a34c9805b0488f5a93\nBranch: master\nTime: 2026-03-31T16:41:55+02:00"
+          },
+          {
+            "name": "Official Sphinx-Needs documentation (without services)",
+            "value": 58.467015105,
+            "unit": "s",
+            "extra": "Commit: df81a5c8e9c80866923679a34c9805b0488f5a93\nBranch: master\nTime: 2026-03-31T16:41:55+02:00"
           }
         ]
       }
